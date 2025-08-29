@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:motion/motion_configs.dart';
+
 
 enum MotionType {
   shake,
@@ -12,10 +12,10 @@ enum MotionType {
 
   Widget createMotion(Widget child) {
     return switch (this) {
-      MotionType.shake => ShakeMotion(child: child),
-      MotionType.fade => FadeMotion(child: child),
-      MotionType.slide => SlideMotion(child: child),
-      MotionType.scale => ScaleMotion(child: child),
+      MotionType.shake  => ShakeMotion(child: child),
+      MotionType.fade   => FadeMotion(child: child),
+      MotionType.slide  => SlideMotion(child: child),
+      MotionType.scale  => ScaleMotion(child: child),
       MotionType.rotate => RotateMotion(child: child),
     };
   }
@@ -27,27 +27,25 @@ abstract class Motion extends StatefulWidget {
   final Widget child;
 }
 
-abstract class _MotionState extends State<Motion>
-    with SingleTickerProviderStateMixin {
+abstract class _MotionState extends State<Motion> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    final config = const MotionConfigDefault();
-    controller = AnimationController(
-      vsync: this,
-      duration: config.duration,
-      lowerBound: config.lowerBound,
-      upperBound: config.upperBound,
-      value: config.lowerBound,
-      reverseDuration: config.duration,
-    );
-
-    controller.repeat(
-      reverse: true,
-      period: config.duration,
-    );
+    // controller = AnimationController(
+    //   vsync: this,
+    //   duration: config.duration,
+    //   lowerBound: config.lowerBound,
+    //   upperBound: config.upperBound,
+    //   value: config.lowerBound,
+    //   reverseDuration: config.duration,
+    // );
+    //
+    // controller.repeat(
+    //   reverse: true,
+    //   period: config.duration,
+    // );
   }
 
   @override
