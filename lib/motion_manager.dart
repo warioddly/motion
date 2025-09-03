@@ -1,7 +1,6 @@
-
 import 'package:flutter/foundation.dart' show ChangeNotifier;
-
-import 'motions.dart' show MotionType;
+import 'package:motion/editor/animation_list_sidebar.dart';
+import 'package:motion/motions/_motion.dart';
 
 final class MotionManager extends ChangeNotifier {
   static final MotionManager _instance = MotionManager._internal();
@@ -10,33 +9,18 @@ final class MotionManager extends ChangeNotifier {
 
   MotionManager._internal();
 
-  final List<MotionType> _pausedMotions = [];
-  final List<MotionType> _motions = [];
+  final List<MotionEntry> _motions = [];
 
-  void register(MotionType motion) {
-    _motions.add(motion);
+  void register(MotionFactory entry) {
+    _motions.add(entry());
     notifyListeners();
   }
 
-  void unregister(MotionType motion) {
-    _motions.remove(motion);
+  void unregister(MotionEntry entry) {
+    _motions.remove(entry);
     notifyListeners();
   }
 
-  void pause(MotionType motion) {
-    if (_motions.contains(motion)) {
-      _pausedMotions.add(motion);
-      notifyListeners();
-    }
-  }
-
-  void resume(MotionType motion) {
-    if (_pausedMotions.contains(motion)) {
-      _pausedMotions.remove(motion);
-      notifyListeners();
-    }
-  }
-
-  List<MotionType> get motions => List.unmodifiable(_motions);
+  List<MotionEntry> get motions => List.unmodifiable(_motions);
 
 }

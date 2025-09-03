@@ -1,14 +1,18 @@
 
-
 import 'package:flutter/material.dart';
-import 'package:motion/motions.dart';
+import 'package:motion/motions/_motion.dart';
+import 'package:motion/motions/rotate_motion.dart';
+
+typedef MotionFactory = MotionEntry Function();
 
 class AnimationListSidebar extends StatelessWidget {
   const AnimationListSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final motions = MotionType.values;
+    final motions = [
+      RotateMotion().create,
+    ];
     return Container(
       width: 300,
       color: Colors.greenAccent,
@@ -21,7 +25,7 @@ class AnimationListSidebar extends StatelessWidget {
               final motion = motions[index];
               return SizedBox(
                 height: 80,
-                child: Draggable<MotionType>(
+                child: Draggable<MotionFactory>(
                   data: motion,
                   feedback: Material(
                     child: Container(
@@ -38,7 +42,7 @@ class AnimationListSidebar extends StatelessWidget {
                   child: SizedBox(
                     height: 80,
                     child: Text(
-                      motion.name,
+                      motion.runtimeType.toString(),
                       textAlign: TextAlign.center,
                     ),
                   ),
