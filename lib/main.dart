@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/editor/control_panel/motion_control_panel.dart';
-import 'package:motion/editor/playground/motion_playground.dart';
-import 'package:motion/editor/motions_sidebar/motions_sidebar.dart';
+import 'package:motion/editor/motions_control_panel.dart';
+import 'package:motion/editor/motions_playground.dart';
+import 'package:motion/editor/motions_sidebar.dart';
 
 
 void main() {
@@ -29,8 +29,8 @@ class MotionEditor extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             MotionsSidebar(),
-            MotionPlayground(),
-            MotionControlPanel(),
+            MotionsPlayground(),
+            MotionsControlPanel(),
           ],
         ),
       ),

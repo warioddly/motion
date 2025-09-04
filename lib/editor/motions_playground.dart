@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:motion/editor/playground/motion_target.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
 import 'package:motion/shared/ui/layouts/grid_background.dart';
 
-class MotionPlayground extends StatelessWidget {
-  const MotionPlayground({super.key});
+class MotionsPlayground extends StatelessWidget {
+  const MotionsPlayground({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +18,38 @@ class MotionPlayground extends StatelessWidget {
               return ListenableBuilder(
                 listenable: manager,
                 builder: (_, __) => manager.entries.fold<Widget>(
-                  const MotionTarget(),
+                  const _MotionTarget(),
                   (previous, MotionEntry motion) => motion.builder(previous),
                 )
               );
             },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class _MotionTarget extends StatelessWidget {
+  const _MotionTarget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox.square(
+        dimension: 200,
+        child: ColoredBox(
+          color: Colors.blue,
+          child: Center(
+            child: const Text(
+              "Drag a motion here",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),

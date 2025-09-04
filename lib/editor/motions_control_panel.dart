@@ -3,8 +3,8 @@ import 'package:motion/core/utils/mixins/post_frame_callback_mixin.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
 
-class MotionControlPanel extends StatelessWidget {
-  const MotionControlPanel({super.key});
+class MotionsControlPanel extends StatelessWidget {
+  const MotionsControlPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
