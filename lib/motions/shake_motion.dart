@@ -5,37 +5,39 @@ import 'package:motion/core/constants/curves.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
 
-class RotateMotion extends Motion {
-  const RotateMotion({super.child, super.key});
+class ShakeMotion extends Motion {
+  const ShakeMotion({super.child, super.key});
 
   @override
-  MotionState createState() => _RotateMotionState();
+  MotionState createState() => _ShakeMotionState();
 
   @override
   MotionEntry call() {
     final globalKey = GlobalKey<MotionState>();
     return MotionEntry(
-      builder: (child) => RotateMotion(
+      builder: (child) => ShakeMotion(
         key: globalKey,
         child: child,
       ),
       state: globalKey,
     );
   }
+
 }
 
-class _RotateMotionState extends MotionState {
+class _ShakeMotionState extends MotionState {
 
   @override
-  String get name => 'Rotate Motion';
+  String get name => 'Shake Motion';
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: super.animation!,
       builder: (context, child) {
-        return Transform.rotate(
-          angle: (super.animation?.value ?? 1) * 2 * math.pi,
+        double offset = math.sin((animation?.value ?? 1) * 2 * math.pi * 4) * 8;
+        return Transform.translate(
+          offset: Offset(offset, 0),
           child: child,
         );
       },
@@ -99,5 +101,4 @@ class _RotateMotionState extends MotionState {
       ),
     );
   }
-
 }

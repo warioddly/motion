@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/editor/animation_control_sidebar.dart';
-import 'package:motion/editor/animation_editor_content.dart';
-import 'package:motion/editor/animation_list_sidebar.dart';
+import 'package:motion/editor/control_panel/motion_control_panel.dart';
+import 'package:motion/editor/playground/motion_playground.dart';
+import 'package:motion/editor/motions_sidebar/motions_sidebar.dart';
 
 
 void main() {
@@ -19,17 +19,18 @@ class MotionEditor extends StatelessWidget {
     return MaterialApp(
       title: 'Motion',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
+      debugShowCheckedModeBanner: false,
       scrollBehavior: CupertinoScrollBehavior(),
       home: const Scaffold(
         body: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            AnimationListSidebar(),
-            AnimationEditorContent(),
-            AnimationControlSidebar(),
+            MotionsSidebar(),
+            MotionPlayground(),
+            MotionControlPanel(),
           ],
         ),
       ),

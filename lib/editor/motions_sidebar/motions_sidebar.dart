@@ -1,18 +1,20 @@
 
 import 'package:flutter/material.dart';
-import 'package:motion/motions/_motion.dart';
+import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/rotate_motion.dart';
+import 'package:motion/motions/shake_motion.dart';
 
-typedef MotionFactory = MotionEntry Function();
-
-class AnimationListSidebar extends StatelessWidget {
-  const AnimationListSidebar({super.key});
+class MotionsSidebar extends StatelessWidget {
+  const MotionsSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final motions = [
-      RotateMotion().create,
-    ];
+    
+    final motions = {
+      "Rotate": RotateMotion(),
+      "Shake": ShakeMotion(),
+    };
+    
     return Container(
       width: 300,
       color: Colors.greenAccent,
@@ -20,9 +22,9 @@ class AnimationListSidebar extends StatelessWidget {
         body: Scrollbar(
           child: ListView.builder(
             primary: true,
-            itemCount: motions.length,
+            itemCount: motions.values.length,
             itemBuilder: (context, index) {
-              final motion = motions[index];
+              final motion = motions.values.elementAt(index);
               return SizedBox(
                 height: 80,
                 child: Draggable<MotionFactory>(
@@ -41,9 +43,11 @@ class AnimationListSidebar extends StatelessWidget {
                   ),
                   child: SizedBox(
                     height: 80,
-                    child: Text(
-                      motion.runtimeType.toString(),
-                      textAlign: TextAlign.center,
+                    child: Center(
+                      child: Text(
+                        motions.keys.elementAt(index),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
