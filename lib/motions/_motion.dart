@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/shared/ui/forms/curve_picker.dart';
+import 'package:motion/shared/ui/forms/shared_checkbox.dart';
 
 class MotionConfig {
   final Duration duration;
@@ -141,6 +143,15 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
                 ),
                 Spacer(),
                 IconButton(
+                  tooltip: 'Hide animation',
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    MotionManager.instance.unregister(entry);
+                  },
+                  icon: const Icon(CupertinoIcons.eye_slash, size: 16),
+                ),
+                IconButton(
+                  tooltip: "Delete",
                   visualDensity: VisualDensity.compact,
                   onPressed: () {
                     MotionManager.instance.unregister(entry);
@@ -149,7 +160,9 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
                 ),
               ],
             ),
+
             SizedBox(height: 8),
+
             TextField(
               keyboardType: TextInputType.number,
               controller: TextEditingController()
@@ -167,11 +180,20 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
               },
             ),
             SizedBox(height: 8),
-            CurvePicker(
+            UICurvePicker(
               selected: config.curve,
               onChanged: (curve) {
                 updateConfig(config.copyWith(curve: curve));
               },
+            ),
+
+            SizedBox(height: 8),
+
+            UICheckbox(
+              size: 16,
+              value: true,
+              label: Text("Repeat"),
+              onChanged: (bool value) {  },
             ),
           ],
         ),

@@ -15,15 +15,56 @@ class MotionsControlPanel extends StatelessWidget {
           width: 300,
           color: Colors.amberAccent,
           child: Scaffold(
-            body: Scrollbar(
-              child: ListView.builder(
-                primary: true,
-                itemCount: MotionManager.instance.entries.length,
-                itemBuilder: (_, index) {
-                  final entry = MotionManager.instance.entries[index];
-                  return MotionControl(entry: entry);
-                },
-              ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 8),
+                Card(
+                  margin: EdgeInsets.symmetric(horizontal: 12),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        IconButton(
+                          tooltip: "Play",
+                          onPressed: () {},
+                          icon: Icon(Icons.play_arrow),
+                        ),
+                        IconButton(
+                          tooltip: "Repeat",
+                          onPressed: () {},
+                          icon: Icon(Icons.repeat),
+                        ),
+                        IconButton(
+                          tooltip: "Reset",
+                          onPressed: () => MotionManager.instance.entries.forEach(
+                            MotionManager.instance.unregister,
+                          ),
+                          icon: Icon(Icons.restart_alt),
+                        ),
+                        IconButton(
+                          tooltip: "Source code",
+                          onPressed: () {},
+                          icon: Icon(Icons.code),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    primary: true,
+                    itemCount: MotionManager.instance.entries.length,
+                    itemBuilder: (_, index) {
+                      final entry = MotionManager.instance.entries[index];
+                      return MotionControl(entry: entry);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -43,7 +84,6 @@ class MotionControl extends StatefulWidget {
 
 class _MotionControlState extends State<MotionControl>
     with PostFrameCallbackMixin {
-
   @override
   Widget build(BuildContext context) {
     final state = widget.entry.state.currentState;

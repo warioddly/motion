@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
@@ -119,6 +120,15 @@ class _AlignMotionState extends MotionState {
                 ),
                 Spacer(),
                 IconButton(
+                  tooltip: 'Hide animation',
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    MotionManager.instance.unregister(entry);
+                  },
+                  icon: const Icon(CupertinoIcons.eye_slash, size: 16),
+                ),
+                IconButton(
+                  tooltip: 'Delete',
                   visualDensity: VisualDensity.compact,
                   onPressed: () {
                     MotionManager.instance.unregister(entry);
@@ -173,7 +183,7 @@ class _AlignMotionState extends MotionState {
               ],
             ),
             SizedBox(height: 8),
-            CurvePicker(
+            UICurvePicker(
               selected: config.curve,
               onChanged: (curve) {
                 updateConfig(config.copyWith(curve: curve));

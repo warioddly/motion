@@ -35,6 +35,10 @@ abstract final class AppTheme {
         isDense: true,
         border: OutlineInputBorder(),
         helperMaxLines: 2,
+        contentPadding: EdgeInsets.all(8),
+        labelStyle: TextStyle(
+          fontSize: 14,
+        ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
         shape: defaultShape,

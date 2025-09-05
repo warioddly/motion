@@ -60,21 +60,23 @@ class _CurvePreviewState extends State<CurvePreview> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 300,
-        height: 200,
-        color: Colors.white,
-        child: AnimatedBuilder(
-          animation: curvedAnimation,
-          builder: (context, child) {
-            return CustomPaint(
-              painter: _DrawCurve(
-                curve: widget.curve,
-                t: curvedAnimation.value,
-              ),
-              child: SizedBox.square(),
-            );
-          },
+      child: Card(
+        child: Container(
+          width: 300,
+          height: 200,
+          padding: EdgeInsets.all(12),
+          child: AnimatedBuilder(
+            animation: curvedAnimation,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: _DrawCurve(
+                  curve: widget.curve,
+                  t: curvedAnimation.value,
+                ),
+                child: SizedBox.square(),
+              );
+            },
+          ),
         ),
       ),
     );

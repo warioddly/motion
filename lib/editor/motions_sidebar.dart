@@ -3,6 +3,7 @@ import 'package:motion/motion_manager.dart';
 import 'package:motion/motions/align_motion.dart';
 import 'package:motion/motions/rotate_motion.dart';
 import 'package:motion/motions/shake_motion.dart';
+import 'package:motion/shared/ui/theme/motion_theme.dart';
 
 const _sidebarWidth = 300.0;
 
@@ -22,7 +23,11 @@ class MotionsSidebar extends StatelessWidget {
 
             SliverAppBar(
               centerTitle: false,
-              title: Text("Motions"),
+              title: Text("Motion"),
+            ),
+
+            SliverToBoxAdapter(
+              child: Divider(),
             ),
 
             SliverList.builder(
@@ -31,24 +36,41 @@ class MotionsSidebar extends StatelessWidget {
                 final motion = motions.elementAt(index);
                 return Draggable<MotionFactory>(
                   data: motion.call,
-                  feedback: Material(
-                    child: Container(
-                      height: 46,
-                      width: _sidebarWidth,
-                      color: Colors.blue.withOpacity(0.7),
-                      child: Center(child: Text(motion.name)),
+                  feedback: MouseRegion(
+                    cursor: SystemMouseCursors.move,
+                    child: Theme(
+                      data: AppTheme.theme,
+                      child: Card(
+                        color: Theme.of(context).colorScheme.surfaceContainerLow,
+                        shadowColor: Colors.black,
+                        elevation: 4,
+                        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        child: SizedBox(
+                          height: 40,
+                          width: _sidebarWidth - 24,
+                          child: Center(child: Text(motion.name)),
+                        ),
+                      ),
                     ),
                   ),
-                  childWhenDragging: ListTile(
-                    title: Text("Box"),
+                  childWhenDragging: Card(
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: ListTile(
+                      dense: true,
+                      title: Text(motion.name),
+                    ),
                   ),
-                  child: ListTile(
-                    title: Text(motion.name),
-                    trailing: IconButton(
-                      onPressed: () {
-                        MotionManager.instance.register(motion.call);
-                      },
-                      icon: Icon(Icons.add),
+                  child: Card(
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: ListTile(
+                      dense: true,
+                      title: Text(motion.name),
+                      trailing: IconButton(
+                        onPressed: () {
+                          MotionManager.instance.register(motion.call);
+                        },
+                        icon: Icon(Icons.add_rounded),
+                      ),
                     ),
                   ),
                 );

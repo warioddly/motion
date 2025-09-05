@@ -10,21 +10,50 @@ class MotionsPlayground extends StatelessWidget {
   Widget build(BuildContext context) {
     final manager = MotionManager.instance;
     return Expanded(
-      child: GridBackground(
-        child: RepaintBoundary(
-          child: DragTarget<MotionFactory>(
-            onAccept: manager.register,
-            builder: (context, _, __) {
-              return ListenableBuilder(
-                listenable: manager,
-                builder: (_, __) => manager.entries.fold<Widget>(
-                  const _MotionTarget(),
-                  (previous, MotionEntry motion) => motion.builder(previous),
+      child: Stack(
+        children: [
+          
+          Positioned.fill(
+            child: GridBackground(
+              child: RepaintBoundary(
+                child: DragTarget<MotionFactory>(
+                  onAccept: manager.register,
+                  builder: (context, _, __) {
+                    return ListenableBuilder(
+                      listenable: manager,
+                      builder: (_, __) => manager.entries.fold<Widget>(
+                        const _MotionTarget(),
+                        (previous, MotionEntry motion) => motion.builder(previous),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ),
+          
+          // Positioned(
+          //   top: 16,
+          //   left: 0,
+          //   right: 0,
+          //   child: Center(
+          //     child: Card(
+          //       child: Padding(
+          //         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          //         child: Row(
+          //           mainAxisSize: MainAxisSize.min,
+          //           spacing: 8,
+          //           children: [
+          //             IconButton(onPressed: () {} , icon: Icon(Icons.play_arrow)),
+          //             IconButton(onPressed: () {} , icon: Icon(Icons.restart_alt))
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // )
+          
+        ],
       ),
     );
   }

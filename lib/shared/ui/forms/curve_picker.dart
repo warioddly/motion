@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:motion/core/constants/curves.dart';
 import 'package:motion/shared/ui/previews/curve_preview.dart';
 
-class CurvePicker extends StatelessWidget {
-  const CurvePicker({
+class UICurvePicker extends StatelessWidget {
+  const UICurvePicker({
     super.key,
     required this.selected,
     required this.onChanged,
