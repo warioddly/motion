@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/editor/motions_control_panel.dart';
+import 'package:motion/editor/panel/motions_control_panel.dart';
 import 'package:motion/editor/motions_playground.dart';
 import 'package:motion/editor/motions_sidebar.dart';
 import 'package:motion/shared/ui/theme/motion_theme.dart';

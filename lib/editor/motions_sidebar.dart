@@ -10,9 +10,10 @@ const _sidebarWidth = 300.0;
 class MotionsSidebar extends StatelessWidget {
   const MotionsSidebar({super.key});
 
+  static const _motions = [RotateMotion(), ShakeMotion(), AlignMotion()];
+
   @override
   Widget build(BuildContext context) {
-    final motions = [RotateMotion(), ShakeMotion(), AlignMotion()];
 
     return Container(
       width: _sidebarWidth,
@@ -31,9 +32,9 @@ class MotionsSidebar extends StatelessWidget {
             ),
 
             SliverList.builder(
-              itemCount: motions.length,
+              itemCount: _motions.length,
               itemBuilder: (context, index) {
-                final motion = motions.elementAt(index);
+                final motion = _motions[index];
                 return Draggable<MotionFactory>(
                   data: motion.call,
                   feedback: MouseRegion(

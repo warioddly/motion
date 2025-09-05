@@ -19,6 +19,16 @@ abstract final class AppTheme {
           helperMaxLines: 2,
         ),
       ),
+      iconTheme: IconThemeData(
+        size: 16,
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          visualDensity: VisualDensity.compact,
+          enableFeedback: true,
+          iconSize: WidgetStatePropertyAll(18)
+        ),
+      ),
       cardTheme: CardThemeData(
         shape: defaultShape,
         elevation: 0,

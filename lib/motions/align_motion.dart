@@ -125,7 +125,7 @@ class _AlignMotionState extends MotionState {
                   onPressed: () {
                     MotionManager.instance.unregister(entry);
                   },
-                  icon: const Icon(CupertinoIcons.eye_slash, size: 16),
+                  icon: const Icon(CupertinoIcons.eye_slash),
                 ),
                 IconButton(
                   tooltip: 'Delete',
@@ -133,7 +133,7 @@ class _AlignMotionState extends MotionState {
                   onPressed: () {
                     MotionManager.instance.unregister(entry);
                   },
-                  icon: const Icon(Icons.close, size: 16),
+                  icon: const Icon(Icons.close),
                 ),
               ],
             ),

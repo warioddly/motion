@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motion/editor/panel/widgets/motion_default_control.dart';
 import 'package:motion/motion_manager.dart';
 import 'package:motion/shared/ui/forms/curve_picker.dart';
-import 'package:motion/shared/ui/forms/shared_checkbox.dart';
+import 'package:motion/shared/ui/forms/ui_checkbox.dart';
+import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
 class MotionConfig {
   final Duration duration;
@@ -57,7 +59,6 @@ class MotionConfig {
 }
 
 final class MotionEntry {
-
   final GlobalKey<MotionState> state;
   final Motion Function(Widget child) builder;
 
@@ -65,6 +66,11 @@ final class MotionEntry {
 
   Widget wrap(Widget child) => builder(child);
 
+}
+
+extension MotionEntryExtension on MotionEntry {
+  MotionState? get currentState => state.currentState;
+  String? get name => currentState?.widget.name;
 }
 
 abstract class Motion extends StatefulWidget {
@@ -78,12 +84,10 @@ abstract class Motion extends StatefulWidget {
   final Widget? child;
 
   String get name;
-
 }
 
-abstract class MotionState extends State<Motion> with SingleTickerProviderStateMixin {
-
-
+abstract class MotionState extends State<Motion>
+    with SingleTickerProviderStateMixin {
   @protected
   AnimationController? controller;
 
@@ -103,10 +107,9 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
   }
 
   void _initialize(MotionConfig config) {
-
     controller ??= AnimationController(
-        vsync: this,
-      );
+      vsync: this,
+    );
 
     controller
       ?..duration = config.duration
@@ -120,91 +123,16 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
     );
 
     controller?.repeat(period: config.duration);
-
   }
 
   void updateConfig(MotionConfig config) => _initialize(this.config = config);
 
-  Widget buildControlPanel(BuildContext context, MotionEntry entry) {
-    return Card(
-      margin: EdgeInsets.all(12).copyWith(bottom: 0),
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Text(
-                  widget.name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                  tooltip: 'Hide animation',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(entry);
-                  },
-                  icon: const Icon(CupertinoIcons.eye_slash, size: 16),
-                ),
-                IconButton(
-                  tooltip: "Delete",
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(entry);
-                  },
-                  icon: const Icon(Icons.close, size: 16),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 8),
-
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: TextEditingController()
-                ..text = config.duration.inMilliseconds.toString(),
-              decoration: const InputDecoration(labelText: 'Duration (ms)'),
-              onChanged: (value) {
-                final ms = int.tryParse(value);
-                if (ms != null) {
-                  updateConfig(
-                    config.copyWith(
-                      duration: Duration(milliseconds: ms),
-                    ),
-                  );
-                }
-              },
-            ),
-            SizedBox(height: 8),
-            UICurvePicker(
-              selected: config.curve,
-              onChanged: (curve) {
-                updateConfig(config.copyWith(curve: curve));
-              },
-            ),
-
-            SizedBox(height: 8),
-
-            UICheckbox(
-              size: 16,
-              value: true,
-              label: Text("Repeat"),
-              onChanged: (bool value) {  },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget buildControlPanel(BuildContext context, MotionEntry entry) =>
+      MotionDefaultControl(entry: entry);
 
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
   }
-
 }
