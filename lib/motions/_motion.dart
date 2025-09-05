@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:motion/motion_manager.dart';
+import 'package:motion/shared/ui/forms/curve_picker.dart';
 
-final class MotionConfig {
+class MotionConfig {
   final Duration duration;
   final double lowerBound;
   final double upperBound;
@@ -72,11 +74,13 @@ abstract class Motion extends StatefulWidget {
   MotionEntry call();
 
   final Widget? child;
+
+  String get name;
+
 }
 
 abstract class MotionState extends State<Motion> with SingleTickerProviderStateMixin {
 
-  String get name;
 
   @protected
   AnimationController? controller;
@@ -88,13 +92,15 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
 
   MotionConfig get config => _config;
 
+  set config(covariant MotionConfig value) => _config = value;
+
   @override
   void initState() {
     super.initState();
-    _init(_config);
+    _initialize(config);
   }
 
-  void _init(MotionConfig config) {
+  void _initialize(MotionConfig config) {
 
     controller ??= AnimationController(
         vsync: this,
@@ -115,9 +121,63 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
 
   }
 
-  void updateConfig(MotionConfig config) => _init(_config = config);
+  void updateConfig(MotionConfig config) => _initialize(this.config = config);
 
-  Widget buildControlPanel(BuildContext context, MotionEntry entry);
+  Widget buildControlPanel(BuildContext context, MotionEntry entry) {
+    return Card(
+      margin: EdgeInsets.all(12).copyWith(bottom: 0),
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Text(
+                  widget.name,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Spacer(),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    MotionManager.instance.unregister(entry);
+                  },
+                  icon: const Icon(Icons.close, size: 16),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: TextEditingController()
+                ..text = config.duration.inMilliseconds.toString(),
+              decoration: const InputDecoration(labelText: 'Duration (ms)'),
+              onChanged: (value) {
+                final ms = int.tryParse(value);
+                if (ms != null) {
+                  updateConfig(
+                    config.copyWith(
+                      duration: Duration(milliseconds: ms),
+                    ),
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 8),
+            CurvePicker(
+              selected: config.curve,
+              onChanged: (curve) {
+                updateConfig(config.copyWith(curve: curve));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void dispose() {

@@ -20,7 +20,7 @@ class MotionsPlayground extends StatelessWidget {
                 builder: (_, __) => manager.entries.fold<Widget>(
                   const _MotionTarget(),
                   (previous, MotionEntry motion) => motion.builder(previous),
-                )
+                ),
               );
             },
           ),
@@ -29,7 +29,6 @@ class MotionsPlayground extends StatelessWidget {
     );
   }
 }
-
 
 class _MotionTarget extends StatelessWidget {
   const _MotionTarget();

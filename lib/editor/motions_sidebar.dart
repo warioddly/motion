@@ -1,59 +1,60 @@
-
 import 'package:flutter/material.dart';
 import 'package:motion/motion_manager.dart';
+import 'package:motion/motions/align_motion.dart';
 import 'package:motion/motions/rotate_motion.dart';
 import 'package:motion/motions/shake_motion.dart';
+
+const _sidebarWidth = 300.0;
 
 class MotionsSidebar extends StatelessWidget {
   const MotionsSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
-    final motions = {
-      "Rotate": RotateMotion(),
-      "Shake": ShakeMotion(),
-    };
-    
+    final motions = [RotateMotion(), ShakeMotion(), AlignMotion()];
+
     return Container(
-      width: 300,
+      width: _sidebarWidth,
       color: Colors.greenAccent,
       child: Scaffold(
-        body: Scrollbar(
-          child: ListView.builder(
-            primary: true,
-            itemCount: motions.values.length,
-            itemBuilder: (context, index) {
-              final motion = motions.values.elementAt(index);
-              return SizedBox(
-                height: 80,
-                child: Draggable<MotionFactory>(
-                  data: motion,
+        body: CustomScrollView(
+          slivers: [
+
+            SliverAppBar(
+              centerTitle: false,
+              title: Text("Motions"),
+            ),
+
+            SliverList.builder(
+              itemCount: motions.length,
+              itemBuilder: (context, index) {
+                final motion = motions.elementAt(index);
+                return Draggable<MotionFactory>(
+                  data: motion.call,
                   feedback: Material(
                     child: Container(
-                      height: 80,
+                      height: 46,
+                      width: _sidebarWidth,
                       color: Colors.blue.withOpacity(0.7),
-                      child: const Center(child: Text("Drag")),
+                      child: Center(child: Text(motion.name)),
                     ),
                   ),
-                  childWhenDragging: Container(
-                    height: 80,
-                    color: Colors.grey,
-                    child: const Center(child: Text("Box")),
+                  childWhenDragging: ListTile(
+                    title: Text("Box"),
                   ),
-                  child: SizedBox(
-                    height: 80,
-                    child: Center(
-                      child: Text(
-                        motions.keys.elementAt(index),
-                        textAlign: TextAlign.center,
-                      ),
+                  child: ListTile(
+                    title: Text(motion.name),
+                    trailing: IconButton(
+                      onPressed: () {
+                        MotionManager.instance.register(motion.call);
+                      },
+                      icon: Icon(Icons.add),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
