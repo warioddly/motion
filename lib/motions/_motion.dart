@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motion/editor/panel/widgets/motion_default_control.dart';
-import 'package:motion/motion_manager.dart';
-import 'package:motion/shared/ui/forms/curve_picker.dart';
-import 'package:motion/shared/ui/forms/ui_checkbox.dart';
-import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
 class MotionConfig {
   final Duration duration;
@@ -127,8 +123,9 @@ abstract class MotionState extends State<Motion>
 
   void updateConfig(MotionConfig config) => _initialize(this.config = config);
 
-  Widget buildControlPanel(BuildContext context, MotionEntry entry) =>
-      MotionDefaultControl(entry: entry);
+  Widget buildControlPanel(BuildContext context, MotionEntry entry) {
+    return MotionDefaultControl(entry: entry);
+  }
 
   @override
   void dispose() {

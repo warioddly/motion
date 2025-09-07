@@ -18,7 +18,6 @@ class _MotionControlState extends State<MotionControl>
   @override
   Widget build(BuildContext context) {
     final state = widget.entry.currentState;
-    print('widget.entry.currentState ${widget.entry.currentState}');
     return state?.buildControlPanel(context, widget.entry) ?? SizedBox.shrink();
   }
 

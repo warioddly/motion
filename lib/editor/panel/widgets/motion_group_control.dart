@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motion/motion_manager.dart';
 
-
 class MotionGroupControl extends StatelessWidget {
   const MotionGroupControl({super.key});
 
@@ -28,10 +27,11 @@ class MotionGroupControl extends StatelessWidget {
             ),
             IconButton(
               tooltip: "Reset",
-              onPressed: () =>
-                  MotionManager.instance.entries.forEach(
-                    MotionManager.instance.unregister,
-                  ),
+              onPressed: () {
+                MotionManager.instance.entries.forEach(
+                  MotionManager.instance.unregister,
+                );
+              },
               icon: Icon(Icons.restart_alt),
             ),
             IconButton(

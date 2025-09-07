@@ -14,10 +14,13 @@ class UiTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: TextEditingController()..text = initialText,
-      decoration: InputDecoration(labelText: labelText),
-      onChanged: onChanged,
+    return Tooltip(
+      message: "Durations in milliseconds",
+      child: TextField(
+        controller: TextEditingController()..text = initialText,
+        decoration: InputDecoration(labelText: labelText),
+        onChanged: onChanged,
+      ),
     );
   }
 }

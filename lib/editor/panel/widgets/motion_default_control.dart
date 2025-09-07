@@ -1,8 +1,5 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/motion_manager.dart';
+import 'package:motion/editor/panel/widgets/motion_action_control.dart';
 import 'package:motion/motions/_motion.dart';
 import 'package:motion/shared/ui/forms/curve_picker.dart';
 import 'package:motion/shared/ui/forms/ui_checkbox.dart';
@@ -26,31 +23,7 @@ class MotionDefaultControl extends StatelessWidget {
           spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Text(
-                  entry.name ?? '',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                  tooltip: 'Hide',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () => MotionManager.instance.unregister(entry),
-                  icon: Icon(CupertinoIcons.eye_slash),
-                ),
-                IconButton(
-                  tooltip: "Delete",
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(entry);
-                  },
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
+            MotionActionControl(entry: entry),
             UiTextfield(
               initialText: config.duration.inMilliseconds.toString(),
               labelText: 'Duration (ms)',

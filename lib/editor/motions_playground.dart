@@ -68,7 +68,7 @@ class _MotionTarget extends StatelessWidget {
       child: SizedBox.square(
         dimension: 200,
         child: ColoredBox(
-          color: Colors.blue,
+            color: Colors.blue,
           child: Center(
             child: const Text(
               "Drag a motion here",

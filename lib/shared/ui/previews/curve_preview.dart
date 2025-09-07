@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:motion/shared/ui/previews/preview_overlay.dart';
 
-
 class CurvePreview extends StatefulWidget {
   const CurvePreview({super.key, required this.curve, this.onComplete});
 
   final Curve curve;
   final VoidCallback? onComplete;
 
-  static final overlay = PreviewOverlay();
+  static final _overlay = PreviewOverlay();
 
   static show(BuildContext context, Curve curve) {
-    overlay.dispose();
-    overlay.show(context,
+    _overlay
+      ..dispose()
+      ..show(
+        context,
         CurvePreview(
           curve: curve,
-          onComplete: () => overlay.dispose(),
-        )
-    );
+          onComplete: _overlay.dispose,
+        ),
+      );
   }
 
   @override
@@ -25,7 +26,6 @@ class CurvePreview extends StatefulWidget {
 }
 
 class _CurvePreviewState extends State<CurvePreview> with SingleTickerProviderStateMixin {
-
   late AnimationController controller;
   late CurvedAnimation curvedAnimation;
 
@@ -48,7 +48,6 @@ class _CurvePreviewState extends State<CurvePreview> with SingleTickerProviderSt
         Future.delayed(Durations.medium2, widget.onComplete?.call);
       }
     });
-
   }
 
   @override
@@ -82,7 +81,6 @@ class _CurvePreviewState extends State<CurvePreview> with SingleTickerProviderSt
     );
   }
 }
-
 
 class _DrawCurve extends CustomPainter {
   final Curve curve;
@@ -148,7 +146,6 @@ class _DrawCurve extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return oldDelegate is _DrawCurve && oldDelegate.curve != curve ||
-        oldDelegate is _DrawCurve && oldDelegate.t != t;
+    return oldDelegate is _DrawCurve && oldDelegate.curve != curve || oldDelegate is _DrawCurve && oldDelegate.t != t;
   }
 }

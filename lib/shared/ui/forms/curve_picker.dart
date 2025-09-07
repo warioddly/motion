@@ -14,23 +14,26 @@ class UICurvePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu<Curve>(
-      label: Text("Curve"),
-      initialSelection: selected,
-      onSelected: onChanged,
-      enableSearch: false,
-      enableFilter: false,
-      showTrailingIcon: false,
-      dropdownMenuEntries: allCurves.map((e) {
-        return DropdownMenuEntry<Curve>(
-          value: e.curve,
-          label: e.name,
-          leadingIcon: IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: () => CurvePreview.show(context, e.curve),
-          ),
-        );
-      }).toList(),
+    return Tooltip(
+      message: selected.toString(),
+      child: DropdownMenu<Curve>(
+        label: Text("Curve"),
+        initialSelection: selected,
+        onSelected: onChanged,
+        enableSearch: false,
+        enableFilter: false,
+        showTrailingIcon: false,
+        dropdownMenuEntries: allCurves.map((e) {
+          return DropdownMenuEntry<Curve>(
+            value: e.curve,
+            label: e.name,
+            leadingIcon: IconButton(
+              icon: Icon(Icons.play_arrow),
+              onPressed: () => CurvePreview.show(context, e.curve),
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

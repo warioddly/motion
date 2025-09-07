@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/motion_manager.dart';
+import 'package:motion/editor/panel/widgets/motion_action_control.dart';
 import 'package:motion/motions/_motion.dart';
 import 'package:motion/shared/ui/forms/curve_picker.dart';
+import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
 class AlignMotionConfig extends MotionConfig {
   final double dx;
@@ -67,6 +67,9 @@ class AlignMotion extends Motion {
   MotionState createState() => _AlignMotionState();
 
   @override
+  String get name => 'Align Motion';
+
+  @override
   MotionEntry call() {
     final globalKey = GlobalKey<MotionState>();
     return MotionEntry(
@@ -77,9 +80,6 @@ class AlignMotion extends Motion {
       state: globalKey,
     );
   }
-
-  @override
-  String get name => 'Align Motion';
 }
 
 class _AlignMotionState extends MotionState {
@@ -93,7 +93,9 @@ class _AlignMotionState extends MotionState {
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              animation!.value * config.dx, animation!.value * config.dy),
+            animation!.value * config.dx,
+            animation!.value * config.dy,
+          ),
           child: child,
         );
       },
@@ -108,41 +110,13 @@ class _AlignMotionState extends MotionState {
       child: Padding(
         padding: EdgeInsets.all(12),
         child: Column(
+          spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Text(
-                  widget.name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                  tooltip: 'Hide animation',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(entry);
-                  },
-                  icon: const Icon(CupertinoIcons.eye_slash),
-                ),
-                IconButton(
-                  tooltip: 'Delete',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(entry);
-                  },
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: TextEditingController()
-                ..text = config.duration.inMilliseconds.toString(),
-              decoration: const InputDecoration(labelText: 'Duration (ms)'),
+            MotionActionControl(entry: entry),
+            UiTextfield(
+              initialText: config.duration.inMilliseconds.toString(),
+              labelText: 'Duration (ms)',
               onChanged: (value) {
                 final ms = int.tryParse(value);
                 if (ms != null) {
@@ -154,26 +128,23 @@ class _AlignMotionState extends MotionState {
                 }
               },
             ),
-            SizedBox(height: 8),
             Row(
+              spacing: 8,
               children: [
                 Flexible(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    controller: TextEditingController()..text = config.dx.toString(),
-                    decoration: const InputDecoration(labelText: 'X'),
+                  child: UiTextfield(
+                    initialText: config.dx.toString(),
+                    labelText: 'X',
                     onChanged: (value) {
                       final dx = double.tryParse(value);
                       updateConfig(config.copyWith(dx: dx));
                     },
                   ),
                 ),
-                SizedBox(width: 8),
                 Flexible(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    controller: TextEditingController()..text = config.dy.toString(),
-                    decoration: const InputDecoration(labelText: 'Y'),
+                  child: UiTextfield(
+                    initialText: config.dy.toString(),
+                    labelText: 'Y',
                     onChanged: (value) {
                       final dy = double.tryParse(value);
                       updateConfig(config.copyWith(dy: dy));
@@ -182,12 +153,11 @@ class _AlignMotionState extends MotionState {
                 ),
               ],
             ),
-            SizedBox(height: 8),
             UICurvePicker(
               selected: config.curve,
               onChanged: (curve) {
                 updateConfig(config.copyWith(curve: curve));
-                setState(() { });
+                setState(() {});
               },
             ),
           ],

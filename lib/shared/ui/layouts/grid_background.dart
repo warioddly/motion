@@ -50,7 +50,7 @@ class _GridPainter extends CustomPainter {
 
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
-      Paint()..color = Colors.grey,
+      Paint()..color = Colors.black12,
     );
 
     for (double x = 0; x <= size.width; x += cellSize) {
