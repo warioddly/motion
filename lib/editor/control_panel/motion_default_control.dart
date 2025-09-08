@@ -63,10 +63,9 @@ class MotionDefaultControl extends StatelessWidget {
                 }
               },
             ),
-            TextField(
-              controller: TextEditingController()
-                ..text = _config.startDelay.inMilliseconds.toString(),
-              decoration: const InputDecoration(labelText: 'Start Delay Duration (ms)'),
+            UiTextfield(
+              initialText: _config.startDelay.inMilliseconds.toString(),
+              labelText: 'Start Delay Duration (ms)',
               onChanged: (value) {
                 final ms = int.tryParse(value);
                 if (ms != null) {
@@ -92,11 +91,9 @@ class MotionDefaultControl extends StatelessWidget {
             ),
             ListenableBuilder(
               listenable: state.listenable,
-              builder: (context, child) {
-                return LinearProgressIndicator(
-                  value: state.listenable.value.clamp(0.0, 1.0),
-                );
-              },
+              builder: (_, __) => LinearProgressIndicator(
+                value: state.listenable.value.clamp(0.0, 1.0),
+              ),
             )
           ],
         ),

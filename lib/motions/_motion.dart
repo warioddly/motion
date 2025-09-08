@@ -22,12 +22,12 @@ abstract class MotionState extends State<Motion>
 
   /// TODO: Все это вынести в отдельный класс контроллер
   @protected
-  AnimationController? controller;
-
-  ValueListenable get listenable => controller!;
+  AnimationController? animationController;
 
   @protected
   Animation<double>? animation;
+
+  ValueListenable get listenable => animationController!;
 
   MotionConfig _config = MotionConfig.defaultConfig();
 
@@ -42,22 +42,22 @@ abstract class MotionState extends State<Motion>
   }
 
   void _initialize(MotionConfig config) {
-    controller ??= AnimationController(
+    animationController ??= AnimationController(
       vsync: this,
     );
 
-    controller
+    animationController
       ?..duration = config.duration
       ..reverseDuration = config.reverseDuration
       ..value = config.value;
 
     animation = CurvedAnimation(
-      parent: controller!,
+      parent: animationController!,
       curve: config.curve,
       reverseCurve: config.reverseCurve,
     );
 
-    controller?.repeat(period: config.duration);
+    animationController?.repeat(period: config.duration);
   }
 
   void updateConfig(covariant MotionConfig config) {
@@ -65,7 +65,7 @@ abstract class MotionState extends State<Motion>
   }
 
   void pause() {
-    controller?.stop();
+    animationController?.stop();
   }
 
   void resume() {
@@ -76,7 +76,7 @@ abstract class MotionState extends State<Motion>
 
   @override
   void dispose() {
-    controller?.dispose();
+    animationController?.dispose();
     super.dispose();
   }
 }
