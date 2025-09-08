@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:motion/_motion_entry.dart';
 import 'package:motion/motions/_motion.dart';
 
 class RotateMotion extends Motion {
@@ -29,10 +30,10 @@ class _RotateMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: super.animation!,
+      animation: animation!,
       builder: (context, child) {
         return Transform.rotate(
-          angle: (super.animation?.value ?? 1) * 2 * math.pi,
+          angle: (animation?.value ?? 1) * 2 * math.pi,
           child: child,
         );
       },

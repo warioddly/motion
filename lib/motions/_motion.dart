@@ -1,77 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
-import 'package:motion/editor/panel/widgets/motion_default_control.dart';
-import 'package:motion/motion_manager.dart';
-import 'package:motion/shared/ui/forms/curve_picker.dart';
-import 'package:motion/shared/ui/forms/ui_checkbox.dart';
-import 'package:motion/shared/ui/forms/ui_textfield.dart';
-
-class MotionConfig {
-  final Duration duration;
-  final double lowerBound;
-  final double upperBound;
-  final double value;
-  final Duration reverseDuration;
-  final Curve curve;
-  final Curve reverseCurve;
-
-  const MotionConfig({
-    required this.duration,
-    required this.lowerBound,
-    required this.upperBound,
-    required this.value,
-    required this.reverseDuration,
-    required this.curve,
-    required this.reverseCurve,
-  });
-
-  factory MotionConfig.defaultConfig() {
-    return MotionConfig(
-      duration: Durations.medium3,
-      reverseDuration: Durations.medium3,
-      lowerBound: 0.0,
-      upperBound: 1.0,
-      value: 0.0,
-      curve: Curves.linear,
-      reverseCurve: Curves.linear,
-    );
-  }
-
-  MotionConfig copyWith({
-    Duration? duration,
-    double? lowerBound,
-    double? upperBound,
-    double? value,
-    Duration? reverseDuration,
-    Curve? curve,
-    Curve? reverseCurve,
-  }) {
-    return MotionConfig(
-      duration: duration ?? this.duration,
-      reverseDuration: reverseDuration ?? this.reverseDuration,
-      lowerBound: lowerBound ?? this.lowerBound,
-      upperBound: upperBound ?? this.upperBound,
-      value: value ?? this.value,
-      curve: curve ?? this.curve,
-      reverseCurve: reverseCurve ?? this.reverseCurve,
-    );
-  }
-}
-
-final class MotionEntry {
-  final GlobalKey<MotionState> state;
-  final Motion Function(Widget child) builder;
-
-  MotionEntry({required this.builder, required this.state});
-
-  Widget wrap(Widget child) => builder(child);
-
-}
-
-extension MotionEntryExtension on MotionEntry {
-  MotionState? get currentState => state.currentState;
-  String? get name => currentState?.widget.name;
-}
+import 'package:motion/editor/control_panel/motion_default_control.dart';
+import 'package:motion/_motion_config.dart';
+import 'package:motion/_motion_entry.dart';
 
 abstract class Motion extends StatefulWidget {
   const Motion({
@@ -79,17 +10,21 @@ abstract class Motion extends StatefulWidget {
     super.key,
   });
 
-  MotionEntry call();
-
   final Widget? child;
 
   String get name;
+
+  MotionEntry call();
 }
 
 abstract class MotionState extends State<Motion>
     with SingleTickerProviderStateMixin {
+
+  /// TODO: Все это вынести в отдельный класс контроллер
   @protected
   AnimationController? controller;
+
+  ValueListenable get listenable => controller!;
 
   @protected
   Animation<double>? animation;
@@ -125,10 +60,19 @@ abstract class MotionState extends State<Motion>
     controller?.repeat(period: config.duration);
   }
 
-  void updateConfig(MotionConfig config) => _initialize(this.config = config);
+  void updateConfig(covariant MotionConfig config) {
+    _initialize(this.config = config);
+  }
 
-  Widget buildControlPanel(BuildContext context, MotionEntry entry) =>
-      MotionDefaultControl(entry: entry);
+  void pause() {
+    controller?.stop();
+  }
+
+  void resume() {
+    _initialize(config);
+  }
+
+  Widget buildControlPanel(BuildContext context) => MotionDefaultControl(this);
 
   @override
   void dispose() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:motion/editor/panel/widgets/motion_control.dart';
-import 'package:motion/editor/panel/widgets/motion_group_control.dart';
-import 'package:motion/motion_manager.dart';
+import 'package:motion/editor/control_panel/motion_control_builder.dart';
+import 'package:motion/editor/control_panel/motion_group_control.dart';
+import 'package:motion/_motion_manager.dart';
 
 class MotionsControlPanel extends StatelessWidget {
   const MotionsControlPanel({super.key});
@@ -27,7 +27,7 @@ class MotionsControlPanel extends StatelessWidget {
                       itemCount: MotionManager.instance.entries.length,
                       itemBuilder: (_, index) {
                         final entry = MotionManager.instance.entries[index];
-                        return MotionControl(entry: entry);
+                        return MotionControlBuilder(entry: entry);
                       },
                     );
                   },

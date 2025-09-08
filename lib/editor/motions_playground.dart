@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:motion/motion_manager.dart';
-import 'package:motion/motions/_motion.dart';
+import 'package:motion/_motion_entry.dart';
+import 'package:motion/_motion_manager.dart';
 import 'package:motion/shared/ui/layouts/grid_background.dart';
 
 class MotionsPlayground extends StatelessWidget {

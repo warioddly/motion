@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart' show ChangeNotifier;
+import 'package:motion/_motion_entry.dart';
 import 'package:motion/motions/_motion.dart';
 
 typedef MotionFactory = MotionEntry Function();
@@ -17,8 +18,13 @@ final class MotionManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void unregister(MotionEntry entry) {
-    _entries.remove(entry);
+  void unregister(MotionState state) {
+    _entries.removeWhere((e) => identical(e.state.currentState, state));
+    notifyListeners();
+  }
+
+  void clearAll() {
+    _entries.clear();
     notifyListeners();
   }
 

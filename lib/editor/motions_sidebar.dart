@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:motion/motion_manager.dart';
+import 'package:motion/_motion_manager.dart';
 import 'package:motion/motions/align_motion.dart';
 import 'package:motion/motions/rotate_motion.dart';
 import 'package:motion/motions/shake_motion.dart';
-import 'package:motion/shared/ui/theme/motion_theme.dart';
+import 'package:motion/shared/ui/theme/ui_theme.dart';
 
 const _sidebarWidth = 300.0;
 
@@ -40,7 +40,7 @@ class MotionsSidebar extends StatelessWidget {
                   feedback: MouseRegion(
                     cursor: SystemMouseCursors.move,
                     child: Theme(
-                      data: AppTheme.theme,
+                      data: UITheme.theme,
                       child: Card(
                         color: Theme.of(context).colorScheme.surfaceContainerLow,
                         shadowColor: Colors.black,

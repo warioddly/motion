@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/editor/panel/motions_control_panel.dart';
+import 'package:motion/editor/control_panel/motions_control_panel.dart';
 import 'package:motion/editor/motions_playground.dart';
 import 'package:motion/editor/motions_sidebar.dart';
-import 'package:motion/shared/ui/theme/motion_theme.dart';
+import 'package:motion/shared/ui/theme/ui_theme.dart';
 
 
 void main() {
@@ -19,8 +19,8 @@ class MotionEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Motion',
-      theme: AppTheme.theme,
-      darkTheme: AppTheme.theme,
+      theme: UITheme.theme,
+      darkTheme: UITheme.theme,
       debugShowCheckedModeBanner: false,
       scrollBehavior: CupertinoScrollBehavior(),
       home: const Scaffold(

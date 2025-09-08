@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-abstract final class AppTheme {
+abstract final class UITheme {
   static final theme = getDarkTheme();
 
   static const defaultShape = RoundedRectangleBorder(

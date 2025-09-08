@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:motion/_motion_entry.dart';
 import 'package:motion/motions/_motion.dart';
 
 class ShakeMotion extends Motion {
@@ -31,7 +32,7 @@ class _ShakeMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: super.animation!,
+      animation: animation!,
       builder: (context, child) {
         double offset = math.sin((animation?.value ?? 1) * 2 * math.pi * 4) * 8;
         return Transform.translate(

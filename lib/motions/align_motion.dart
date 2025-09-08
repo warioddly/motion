@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/motion_manager.dart';
+import 'package:motion/_motion_config.dart';
+import 'package:motion/_motion_entry.dart';
+import 'package:motion/_motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
-import 'package:motion/shared/ui/forms/curve_picker.dart';
+import 'package:motion/shared/ui/forms/ui_curve_picker.dart';
 
-class AlignMotionConfig extends MotionConfig {
+final class AlignMotionConfig extends MotionConfig {
   final double dx;
   final double dy;
 
   const AlignMotionConfig({
     required super.duration,
+    required super.startDelay,
     required super.lowerBound,
     required super.upperBound,
     required super.value,
@@ -23,6 +26,7 @@ class AlignMotionConfig extends MotionConfig {
   factory AlignMotionConfig.defaultConfig() {
     return AlignMotionConfig(
       duration: Durations.medium3,
+      startDelay: Duration.zero,
       reverseDuration: Durations.medium3,
       lowerBound: 0.0,
       upperBound: 1.0,
@@ -37,6 +41,7 @@ class AlignMotionConfig extends MotionConfig {
   @override
   AlignMotionConfig copyWith({
     Duration? duration,
+    Duration? startDelay,
     double? lowerBound,
     double? upperBound,
     double? value,
@@ -48,6 +53,7 @@ class AlignMotionConfig extends MotionConfig {
   }) {
     return AlignMotionConfig(
       duration: duration ?? this.duration,
+      startDelay: startDelay ?? this.startDelay,
       reverseDuration: reverseDuration ?? this.reverseDuration,
       lowerBound: lowerBound ?? this.lowerBound,
       upperBound: upperBound ?? this.upperBound,
@@ -67,6 +73,9 @@ class AlignMotion extends Motion {
   MotionState createState() => _AlignMotionState();
 
   @override
+  String get name => 'Align Motion';
+
+  @override
   MotionEntry call() {
     final globalKey = GlobalKey<MotionState>();
     return MotionEntry(
@@ -77,9 +86,6 @@ class AlignMotion extends Motion {
       state: globalKey,
     );
   }
-
-  @override
-  String get name => 'Align Motion';
 }
 
 class _AlignMotionState extends MotionState {
@@ -93,7 +99,9 @@ class _AlignMotionState extends MotionState {
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-              animation!.value * config.dx, animation!.value * config.dy),
+            animation!.value * config.dx,
+            animation!.value * config.dy,
+          ),
           child: child,
         );
       },
@@ -102,7 +110,7 @@ class _AlignMotionState extends MotionState {
   }
 
   @override
-  Widget buildControlPanel(BuildContext context, MotionEntry entry) {
+  Widget buildControlPanel(BuildContext context) {
     return Card(
       margin: EdgeInsets.all(12).copyWith(bottom: 0),
       child: Padding(
@@ -115,15 +123,15 @@ class _AlignMotionState extends MotionState {
                 Text(
                   widget.name,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 Spacer(),
                 IconButton(
                   tooltip: 'Hide animation',
                   visualDensity: VisualDensity.compact,
                   onPressed: () {
-                    MotionManager.instance.unregister(entry);
+                    MotionManager.instance.unregister(this);
                   },
                   icon: const Icon(CupertinoIcons.eye_slash),
                 ),
@@ -131,7 +139,7 @@ class _AlignMotionState extends MotionState {
                   tooltip: 'Delete',
                   visualDensity: VisualDensity.compact,
                   onPressed: () {
-                    MotionManager.instance.unregister(entry);
+                    MotionManager.instance.unregister(this);
                   },
                   icon: const Icon(Icons.close),
                 ),
@@ -139,10 +147,25 @@ class _AlignMotionState extends MotionState {
             ),
             SizedBox(height: 8),
             TextField(
-              keyboardType: TextInputType.number,
               controller: TextEditingController()
                 ..text = config.duration.inMilliseconds.toString(),
               decoration: const InputDecoration(labelText: 'Duration (ms)'),
+              onChanged: (value) {
+                final ms = int.tryParse(value);
+                if (ms != null) {
+                  updateConfig(
+                    config.copyWith(
+                      duration: Duration(milliseconds: ms),
+                    ),
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 8),
+            TextField(
+              controller: TextEditingController()
+                ..text = config.startDelay.inMilliseconds.toString(),
+              decoration: const InputDecoration(labelText: 'Start Delay Duration (ms)'),
               onChanged: (value) {
                 final ms = int.tryParse(value);
                 if (ms != null) {
@@ -160,7 +183,8 @@ class _AlignMotionState extends MotionState {
                 Flexible(
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    controller: TextEditingController()..text = config.dx.toString(),
+                    controller: TextEditingController()
+                      ..text = config.dx.toString(),
                     decoration: const InputDecoration(labelText: 'X'),
                     onChanged: (value) {
                       final dx = double.tryParse(value);
@@ -172,7 +196,8 @@ class _AlignMotionState extends MotionState {
                 Flexible(
                   child: TextField(
                     keyboardType: TextInputType.number,
-                    controller: TextEditingController()..text = config.dy.toString(),
+                    controller: TextEditingController()
+                      ..text = config.dy.toString(),
                     decoration: const InputDecoration(labelText: 'Y'),
                     onChanged: (value) {
                       final dy = double.tryParse(value);
@@ -187,7 +212,7 @@ class _AlignMotionState extends MotionState {
               selected: config.curve,
               onChanged: (curve) {
                 updateConfig(config.copyWith(curve: curve));
-                setState(() { });
+                setState(() {});
               },
             ),
           ],
