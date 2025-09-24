@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/_motion_config.dart';
 import 'package:motion/_motion_entry.dart';
-import 'package:motion/_motion_manager.dart';
 import 'package:motion/motions/_motion.dart';
+import 'package:motion/motions/_motion_config.dart';
+import 'package:motion/motions/_motion_control.dart';
+import 'package:motion/shared/ui/constants/dimensions.dart';
 import 'package:motion/shared/ui/forms/ui_curve_picker.dart';
+import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
-final class AlignMotionConfig extends MotionConfig {
+class AlignMotionConfig extends MotionConfig {
   final double dx;
   final double dy;
 
@@ -93,6 +94,9 @@ class _AlignMotionState extends MotionState {
   AlignMotionConfig config = AlignMotionConfig.defaultConfig();
 
   @override
+  MotionControl get controlPanel => AlignMotionControl(this);
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: animation!,
@@ -108,116 +112,77 @@ class _AlignMotionState extends MotionState {
       child: widget.child,
     );
   }
+}
+
+class AlignMotionControl extends MotionControl {
+  const AlignMotionControl(super.state, {super.key});
 
   @override
-  Widget buildControlPanel(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(12).copyWith(bottom: 0),
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Text(
-                  widget.name,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                Spacer(),
-                IconButton(
-                  tooltip: 'Hide animation',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(this);
-                  },
-                  icon: const Icon(CupertinoIcons.eye_slash),
-                ),
-                IconButton(
-                  tooltip: 'Delete',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: () {
-                    MotionManager.instance.unregister(this);
-                  },
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: TextEditingController()
-                ..text = config.duration.inMilliseconds.toString(),
-              decoration: const InputDecoration(labelText: 'Duration (ms)'),
-              onChanged: (value) {
-                final ms = int.tryParse(value);
-                if (ms != null) {
-                  updateConfig(
-                    config.copyWith(
-                      duration: Duration(milliseconds: ms),
-                    ),
-                  );
-                }
-              },
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: TextEditingController()
-                ..text = config.startDelay.inMilliseconds.toString(),
-              decoration: const InputDecoration(labelText: 'Start Delay Duration (ms)'),
-              onChanged: (value) {
-                final ms = int.tryParse(value);
-                if (ms != null) {
-                  updateConfig(
-                    config.copyWith(
-                      duration: Duration(milliseconds: ms),
-                    ),
-                  );
-                }
-              },
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Flexible(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    controller: TextEditingController()
-                      ..text = config.dx.toString(),
-                    decoration: const InputDecoration(labelText: 'X'),
-                    onChanged: (value) {
-                      final dx = double.tryParse(value);
-                      updateConfig(config.copyWith(dx: dx));
-                    },
-                  ),
-                ),
-                SizedBox(width: 8),
-                Flexible(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    controller: TextEditingController()
-                      ..text = config.dy.toString(),
-                    decoration: const InputDecoration(labelText: 'Y'),
-                    onChanged: (value) {
-                      final dy = double.tryParse(value);
-                      updateConfig(config.copyWith(dy: dy));
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            UICurvePicker(
-              selected: config.curve,
-              onChanged: (curve) {
-                updateConfig(config.copyWith(curve: curve));
-                setState(() {});
-              },
-            ),
-          ],
-        ),
+  AlignMotionConfig get config => state.config as AlignMotionConfig;
+
+  @override
+  List<Widget> fields(BuildContext context) {
+    return [
+      UiTextfield(
+        initialText: config.duration.inMilliseconds.toString(),
+        labelText: 'Duration (ms)',
+        onChanged: (value) {
+          final ms = int.tryParse(value);
+          if (ms != null) {
+            updateConfig(
+              config.copyWith(
+                duration: Duration(milliseconds: ms),
+              ),
+            );
+          }
+        },
       ),
-    );
+      UiTextfield(
+        initialText: config.startDelay.inMilliseconds.toString(),
+        labelText: 'Start Delay Duration (ms)',
+        onChanged: (value) {
+          final ms = int.tryParse(value);
+          if (ms != null) {
+            updateConfig(
+              config.copyWith(
+                duration: Duration(milliseconds: ms),
+              ),
+            );
+          }
+        },
+      ),
+      Row(
+        children: [
+          Flexible(
+            child: UiTextfield(
+              initialText: config.dx.toString(),
+              labelText: 'X',
+              onChanged: (value) {
+                final dx = double.tryParse(value);
+                updateConfig(config.copyWith(dx: dx));
+              },
+            ),
+          ),
+          Spaces.s,
+          Flexible(
+            child: UiTextfield(
+              initialText: config.dy.toString(),
+              labelText: 'Y',
+              onChanged: (value) {
+                final dy = double.tryParse(value);
+                updateConfig(config.copyWith(dy: dy));
+              },
+            ),
+          ),
+        ],
+      ),
+      UICurvePicker(
+        selected: config.curve,
+        onChanged: (curve) {
+          updateConfig(config.copyWith(curve: curve));
+        },
+      ),
+    ];
   }
+
 }

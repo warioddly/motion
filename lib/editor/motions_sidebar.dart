@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motion/_motion_manager.dart';
 import 'package:motion/motions/align_motion.dart';
-import 'package:motion/motions/color_motion.dart';
 import 'package:motion/motions/flip_motion.dart';
 import 'package:motion/motions/opacity_motion.dart';
 import 'package:motion/motions/rotate_motion.dart';
@@ -10,6 +9,7 @@ import 'package:motion/motions/shake_motion.dart';
 import 'package:motion/motions/swing_motion.dart';
 import 'package:motion/motions/tilt_motion.dart';
 import 'package:motion/motions/wave_motion.dart';
+import 'package:motion/shared/ui/constants/dimensions.dart';
 import 'package:motion/shared/ui/theme/ui_theme.dart';
 
 const _sidebarWidth = 300.0;
@@ -23,7 +23,6 @@ class MotionsSidebar extends StatelessWidget {
     AlignMotion(),
     ScaleMotion(),
     OpacityMotion(),
-    ColorMotion(),
     FlipMotion(),
     SwingMotion(),
     WaveMotion(),
@@ -56,12 +55,10 @@ class MotionsSidebar extends StatelessWidget {
                     child: Theme(
                       data: UITheme.theme,
                       child: Card(
-                        color:
-                            Theme.of(context).colorScheme.surfaceContainerLow,
+                        color: Theme.of(context).colorScheme.surfaceContainerLow,
                         shadowColor: Colors.black,
                         elevation: 4,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        margin: Insets.smHorizontal + Insets.xsVertical,
                         child: SizedBox(
                           height: 40,
                           width: _sidebarWidth - 24,
@@ -71,14 +68,14 @@ class MotionsSidebar extends StatelessWidget {
                     ),
                   ),
                   childWhenDragging: Card(
-                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    margin: Insets.smHorizontal + Insets.xsVertical,
                     child: ListTile(
                       dense: true,
                       title: Text(motion.name),
                     ),
                   ),
                   child: Card(
-                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    margin: Insets.smHorizontal + Insets.xsVertical,
                     child: ListTile(
                       dense: true,
                       title: Text(motion.name),

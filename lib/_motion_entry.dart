@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Widget, GlobalKey;
+import 'package:flutter/material.dart' show Widget, GlobalKey, BuildContext;
 import 'package:motion/motions/_motion.dart';
 
 final class MotionEntry {
@@ -17,5 +17,9 @@ extension MotionEntryExtension on MotionEntry {
   MotionState? get currentState => state.currentState;
 
   String? get name => currentState?.widget.name;
+
+  Widget? buildControlPanel(BuildContext context) {
+    return currentState?.buildControlPanel(context);
+  }
 
 }

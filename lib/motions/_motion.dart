@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
-import 'package:motion/editor/control_panel/motion_default_control.dart';
-import 'package:motion/_motion_config.dart';
 import 'package:motion/_motion_entry.dart';
+import 'package:motion/motions/_motion_config.dart';
+import 'package:motion/motions/_motion_control.dart';
+
 
 abstract class Motion extends StatefulWidget {
   const Motion({
@@ -17,9 +19,7 @@ abstract class Motion extends StatefulWidget {
   MotionEntry call();
 }
 
-abstract class MotionState extends State<Motion>
-    with SingleTickerProviderStateMixin {
-
+abstract class MotionState extends State<Motion> with SingleTickerProviderStateMixin {
   /// TODO: Все это вынести в отдельный класс контроллер
   @protected
   AnimationController? animationController;
@@ -34,6 +34,8 @@ abstract class MotionState extends State<Motion>
   MotionConfig get config => _config;
 
   set config(covariant MotionConfig value) => _config = value;
+
+  MotionControl get controlPanel => MotionDefaultControl(this);
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ abstract class MotionState extends State<Motion>
     _initialize(config);
   }
 
-  Widget buildControlPanel(BuildContext context) => MotionDefaultControl(this);
+  Widget buildControlPanel(BuildContext context) => controlPanel;
 
   @override
   void dispose() {

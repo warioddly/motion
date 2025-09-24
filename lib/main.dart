@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motion/editor/control_panel/motions_control_panel.dart';
+import 'package:motion/editor/motions_control_panel.dart';
 import 'package:motion/editor/motions_playground.dart';
 import 'package:motion/editor/motions_sidebar.dart';
 import 'package:motion/shared/ui/theme/ui_theme.dart';
@@ -8,7 +8,6 @@ import 'package:motion/shared/ui/theme/ui_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MotionEditor());
 }
 

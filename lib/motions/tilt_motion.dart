@@ -28,8 +28,8 @@ class _TiltMotionState extends MotionState {
     return AnimatedBuilder(
       animation: animation!,
       builder: (context, child) {
-        final angleX = (animation!.value - 0.5) * 0.5;
-        final angleY = (animation!.value - 0.5) * 0.5;
+        final angleX = (animation!.value - .3) * .3;
+        final angleY = (animation!.value - .3) * .3;
         return Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
