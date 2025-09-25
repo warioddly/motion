@@ -85,21 +85,15 @@ mixin MotionAnimatable<T extends Motion, Config extends MotionConfig> on SingleT
   }
 }
 
-mixin MotionControllable<T extends StatefulWidget> on State<T> {
-  MotionControl get controlPanel;
-
-  Widget buildControlPanel(BuildContext context) => controlPanel;
-}
-
 abstract class MotionState<T extends Motion, Config extends MotionConfig> extends State<T>
     with
         SingleTickerProviderStateMixin,
         MotionConfigurable<T, Config>,
-        MotionAnimatable,
-        MotionControllable {
+        MotionAnimatable {
 
-  @override
   MotionControl get controlPanel => MotionDefaultControl(this);
+
+  Widget buildControlPanel(BuildContext context) => controlPanel;
 
   @protected
   @override
