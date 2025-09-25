@@ -30,10 +30,10 @@ class _RotateMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
         return Transform.rotate(
-          angle: (animation?.value ?? 1) * 2 * math.pi,
+          angle: animation.value * 2 * math.pi,
           child: child,
         );
       },

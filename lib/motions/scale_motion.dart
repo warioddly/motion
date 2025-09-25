@@ -26,33 +26,29 @@ class ScaleMotion extends Motion {
 
   @override
   String get name => 'Scale Motion';
-
 }
 
 class _ScaleMotionState extends MotionState {
-
   @override
   MotionControl get controlPanel => ScaleMotionControl(this);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
         return Transform.scale(
           scale: Tween<double>(
             begin: config.lowerBound,
             end: config.upperBound,
-          ).animate(animation!).value,
+          ).animate(animation).value,
           child: child,
         );
       },
       child: widget.child,
     );
   }
-
 }
-
 
 class ScaleMotionControl extends MotionControl {
   const ScaleMotionControl(super.state, {super.key});
@@ -66,11 +62,7 @@ class ScaleMotionControl extends MotionControl {
         onChanged: (value) {
           final ms = int.tryParse(value);
           if (ms != null) {
-            updateConfig(
-              config.copyWith(
-                duration: Duration(milliseconds: ms),
-              ),
-            );
+            updateConfig(config.copyWith(duration: Duration(milliseconds: ms)));
           }
         },
       ),
@@ -80,11 +72,7 @@ class ScaleMotionControl extends MotionControl {
         onChanged: (value) {
           final ms = int.tryParse(value);
           if (ms != null) {
-            updateConfig(
-              config.copyWith(
-                duration: Duration(milliseconds: ms),
-              ),
-            );
+            updateConfig(config.copyWith(startDelay: Duration(milliseconds: ms)));
           }
         },
       ),
@@ -95,8 +83,11 @@ class ScaleMotionControl extends MotionControl {
               initialText: config.lowerBound.toString(),
               labelText: 'From',
               onChanged: (value) {
-                final lowerBound = double.tryParse(value);
-                updateConfig(config.copyWith(lowerBound: lowerBound));
+                state.updateConfig(
+                  config.copyWith(
+                    lowerBound: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),
@@ -106,8 +97,11 @@ class ScaleMotionControl extends MotionControl {
               initialText: config.upperBound.toString(),
               labelText: 'To',
               onChanged: (value) {
-                final upperBound = double.tryParse(value);
-                updateConfig(config.copyWith(upperBound: upperBound));
+                updateConfig(
+                  config.copyWith(
+                    upperBound: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),

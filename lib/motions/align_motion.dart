@@ -4,6 +4,7 @@ import 'package:motion/motions/_motion.dart';
 import 'package:motion/motions/_motion_config.dart';
 import 'package:motion/motions/_motion_control.dart';
 import 'package:motion/shared/ui/constants/dimensions.dart';
+import 'package:motion/shared/ui/forms/ui_checkbox.dart';
 import 'package:motion/shared/ui/forms/ui_curve_picker.dart';
 import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
@@ -11,7 +12,7 @@ class AlignMotionConfig extends MotionConfig {
   final double dx;
   final double dy;
 
-  const AlignMotionConfig({
+  AlignMotionConfig({
     required super.duration,
     required super.startDelay,
     required super.lowerBound,
@@ -20,6 +21,8 @@ class AlignMotionConfig extends MotionConfig {
     required super.reverseDuration,
     required super.curve,
     required super.reverseCurve,
+    required super.repeat,
+    required super.reverse,
     required this.dx,
     required this.dy,
   });
@@ -34,7 +37,9 @@ class AlignMotionConfig extends MotionConfig {
       value: 0.0,
       curve: Curves.linear,
       reverseCurve: Curves.linear,
-      dx: 0.0,
+      repeat: false,
+      reverse: false,
+      dx: 60.0,
       dy: 0.0,
     );
   }
@@ -51,6 +56,8 @@ class AlignMotionConfig extends MotionConfig {
     Curve? reverseCurve,
     double? dx,
     double? dy,
+    bool? repeat,
+    bool? reverse,
   }) {
     return AlignMotionConfig(
       duration: duration ?? this.duration,
@@ -63,6 +70,8 @@ class AlignMotionConfig extends MotionConfig {
       reverseCurve: reverseCurve ?? this.reverseCurve,
       dx: dx ?? this.dx,
       dy: dy ?? this.dy,
+      repeat: repeat ?? this.repeat,
+      reverse: reverse ?? this.reverse,
     );
   }
 }
@@ -89,9 +98,10 @@ class AlignMotion extends Motion {
   }
 }
 
-class _AlignMotionState extends MotionState {
+class _AlignMotionState extends MotionState<AlignMotion, AlignMotionConfig> {
+
   @override
-  AlignMotionConfig config = AlignMotionConfig.defaultConfig();
+  AlignMotionConfig defaultConfig() => AlignMotionConfig.defaultConfig();
 
   @override
   MotionControl get controlPanel => AlignMotionControl(this);
@@ -99,12 +109,12 @@ class _AlignMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(
-            animation!.value * config.dx,
-            animation!.value * config.dy,
+            animation.value * config.dx,
+            animation.value * config.dy,
           ),
           child: child,
         );
@@ -114,11 +124,8 @@ class _AlignMotionState extends MotionState {
   }
 }
 
-class AlignMotionControl extends MotionControl {
+class AlignMotionControl extends MotionControl<AlignMotion, AlignMotionConfig> {
   const AlignMotionControl(super.state, {super.key});
-
-  @override
-  AlignMotionConfig get config => state.config as AlignMotionConfig;
 
   @override
   List<Widget> fields(BuildContext context) {
@@ -145,7 +152,7 @@ class AlignMotionControl extends MotionControl {
           if (ms != null) {
             updateConfig(
               config.copyWith(
-                duration: Duration(milliseconds: ms),
+                startDelay: Duration(milliseconds: ms),
               ),
             );
           }
@@ -158,8 +165,11 @@ class AlignMotionControl extends MotionControl {
               initialText: config.dx.toString(),
               labelText: 'X',
               onChanged: (value) {
-                final dx = double.tryParse(value);
-                updateConfig(config.copyWith(dx: dx));
+                updateConfig(
+                  config.copyWith(
+                    dx: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),
@@ -169,8 +179,11 @@ class AlignMotionControl extends MotionControl {
               initialText: config.dy.toString(),
               labelText: 'Y',
               onChanged: (value) {
-                final dy = double.tryParse(value);
-                updateConfig(config.copyWith(dy: dy));
+                updateConfig(
+                  config.copyWith(
+                    dy: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),
@@ -179,10 +192,25 @@ class AlignMotionControl extends MotionControl {
       UICurvePicker(
         selected: config.curve,
         onChanged: (curve) {
-          updateConfig(config.copyWith(curve: curve));
+          updateConfig(
+            config.copyWith(curve: curve),
+          );
+        },
+      ),
+      UICheckbox(
+        value: config.reverse,
+        label: Text("Reverse"),
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(reverse: !config.reverse));
+        },
+      ),
+      UICheckbox(
+        value: config.repeat,
+        label: Text("Repeat"),
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(repeat: !config.repeat));
         },
       ),
     ];
   }
-
 }

@@ -7,10 +7,7 @@ import 'package:motion/motions/_motion_control.dart';
 
 
 abstract class Motion extends StatefulWidget {
-  const Motion({
-    this.child,
-    super.key,
-  });
+  const Motion({this.child, super.key});
 
   final Widget? child;
 
@@ -19,31 +16,41 @@ abstract class Motion extends StatefulWidget {
   MotionEntry call();
 }
 
-abstract class MotionState extends State<Motion> with SingleTickerProviderStateMixin {
-  /// TODO: Все это вынести в отдельный класс контроллер
-  @protected
-  AnimationController? animationController;
+mixin MotionConfigurable<T extends StatefulWidget, Config extends MotionConfig> on State<T> {
 
-  @protected
-  Animation<double>? animation;
+  late Config _config = defaultConfig();
 
-  ValueListenable get listenable => animationController!;
+  Config get config => _config;
 
-  MotionConfig _config = MotionConfig.defaultConfig();
-
-  MotionConfig get config => _config;
-
-  set config(covariant MotionConfig value) => _config = value;
-
-  MotionControl get controlPanel => MotionDefaultControl(this);
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize(config);
+  void updateConfig(covariant Config config) {
+    if (identical(_config, config)) return;
+    _config = config;
+    onConfigUpdated(config);
   }
 
-  void _initialize(MotionConfig config) {
+  @protected
+  Config defaultConfig() => MotionConfig.defaultConfig() as Config;
+
+  @protected
+  void onConfigUpdated(covariant Config config);
+
+}
+
+mixin MotionAnimatable<T extends Motion, Config extends MotionConfig> on SingleTickerProviderStateMixin<T> {
+  AnimationController? animationController;
+
+  late Animation<double> animation;
+
+  ValueListenable<double> get listenable => animationController!;
+
+  void pause() => animationController?.stop();
+
+  void resume() => animationController?.forward();
+
+  void reset() => animationController?.reset();
+
+  @protected
+  void _initializeAnimation(covariant Config config) {
     animationController ??= AnimationController(
       vsync: this,
     );
@@ -59,28 +66,51 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
       reverseCurve: config.reverseCurve,
     );
 
-    animationController?.repeat(
-      period: config.duration,
-    );
+    if (config.repeat) {
+      animationController?.repeat(reverse: config.reverse);
+    }
+    else {
+      if (config.reverse) {
+        animationController?.reverse(from: config.upperBound);
+      } else {
+        animationController?.forward(from: config.lowerBound);
+      }
+    }
   }
-
-  void updateConfig(covariant MotionConfig config) {
-    _initialize(this.config = config);
-  }
-
-  void pause() {
-    animationController?.stop();
-  }
-
-  void resume() {
-    _initialize(config);
-  }
-
-  Widget buildControlPanel(BuildContext context) => controlPanel;
 
   @override
   void dispose() {
     animationController?.dispose();
     super.dispose();
   }
+}
+
+mixin MotionControllable<T extends StatefulWidget> on State<T> {
+  MotionControl get controlPanel;
+
+  Widget buildControlPanel(BuildContext context) => controlPanel;
+}
+
+abstract class MotionState<T extends Motion, Config extends MotionConfig> extends State<T>
+    with
+        SingleTickerProviderStateMixin,
+        MotionConfigurable<T, Config>,
+        MotionAnimatable,
+        MotionControllable {
+
+  @override
+  MotionControl get controlPanel => MotionDefaultControl(this);
+
+  @protected
+  @override
+  void initState() {
+    super.initState();
+    _initializeAnimation(config);
+  }
+
+  @override
+  void onConfigUpdated(covariant Config config) {
+    _initializeAnimation(config);
+  }
+
 }

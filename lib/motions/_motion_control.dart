@@ -8,14 +8,14 @@ import 'package:motion/shared/ui/forms/ui_checkbox.dart';
 import 'package:motion/shared/ui/forms/ui_curve_picker.dart';
 import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
-abstract class MotionControl extends StatelessWidget {
+abstract class MotionControl<T extends Motion, Config extends MotionConfig> extends StatelessWidget {
   const MotionControl(this.state, {super.key});
 
-  final MotionState state;
+  final MotionState<T, Config> state;
 
-  MotionConfig get config => state.config;
+  Config get config => state.config;
 
-  void updateConfig(covariant MotionConfig value) => state.updateConfig(value);
+  void updateConfig(Config config) => state.updateConfig(config);
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +86,7 @@ class MotionDefaultControl extends MotionControl {
         onChanged: (value) {
           final ms = int.tryParse(value);
           if (ms != null) {
-            updateConfig(
-              config.copyWith(duration: Duration(milliseconds: ms)),
-            );
+            state.updateConfig(config.copyWith(duration: Duration(milliseconds: ms)));
           }
         },
       ),
@@ -98,11 +96,7 @@ class MotionDefaultControl extends MotionControl {
         onChanged: (value) {
           final ms = int.tryParse(value);
           if (ms != null) {
-            state.updateConfig(
-              config.copyWith(
-                duration: Duration(milliseconds: ms),
-              ),
-            );
+            state.updateConfig(config.copyWith(startDelay: Duration(milliseconds: ms)));
           }
         },
       ),
@@ -113,12 +107,19 @@ class MotionDefaultControl extends MotionControl {
         },
       ),
       UICheckbox(
-        size: 16,
-        value: true,
+        value: config.reverse,
+        label: Text("Reverse"),
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(reverse: !config.reverse));
+        },
+      ),
+      UICheckbox(
+        value: config.repeat,
         label: Text("Repeat"),
-        onChanged: (bool value) {},
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(repeat: !config.repeat));
+        },
       ),
     ];
   }
-
 }

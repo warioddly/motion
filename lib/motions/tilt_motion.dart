@@ -26,10 +26,10 @@ class _TiltMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
-        final angleX = (animation!.value - .3) * .3;
-        final angleY = (animation!.value - .3) * .3;
+        final angleX = (animation.value - .3) * .3;
+        final angleY = (animation.value - .3) * .3;
         return Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()

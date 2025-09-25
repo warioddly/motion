@@ -6,6 +6,7 @@ import 'package:motion/motions/_motion.dart';
 import 'package:motion/motions/_motion_config.dart';
 import 'package:motion/motions/_motion_control.dart';
 import 'package:motion/shared/ui/constants/dimensions.dart';
+import 'package:motion/shared/ui/forms/ui_checkbox.dart';
 import 'package:motion/shared/ui/forms/ui_curve_picker.dart';
 import 'package:motion/shared/ui/forms/ui_textfield.dart';
 
@@ -13,7 +14,7 @@ class WaveMotionConfig extends MotionConfig {
   final double dx;
   final double dy;
 
-  const WaveMotionConfig({
+  WaveMotionConfig({
     required super.duration,
     required super.startDelay,
     required super.lowerBound,
@@ -22,6 +23,8 @@ class WaveMotionConfig extends MotionConfig {
     required super.reverseDuration,
     required super.curve,
     required super.reverseCurve,
+    required super.repeat,
+    required super.reverse,
     required this.dx,
     required this.dy,
   });
@@ -38,6 +41,8 @@ class WaveMotionConfig extends MotionConfig {
       reverseCurve: Curves.linear,
       dx: 0.0,
       dy: 12.0,
+      repeat: true,
+      reverse: false,
     );
   }
 
@@ -53,6 +58,8 @@ class WaveMotionConfig extends MotionConfig {
     Curve? reverseCurve,
     double? dx,
     double? dy,
+    bool? repeat,
+    bool? reverse,
   }) {
     return WaveMotionConfig(
       duration: duration ?? this.duration,
@@ -65,6 +72,8 @@ class WaveMotionConfig extends MotionConfig {
       reverseCurve: reverseCurve ?? this.reverseCurve,
       dx: dx ?? this.dx,
       dy: dy ?? this.dy,
+      repeat: repeat ?? this.repeat,
+      reverse: reverse ?? this.reverse,
     );
   }
 }
@@ -88,21 +97,21 @@ class WaveMotion extends Motion {
   String get name => 'Wave Motion';
 }
 
-class _WaveMotionState extends MotionState {
+class _WaveMotionState extends MotionState<WaveMotion, WaveMotionConfig> {
 
   @override
-  WaveMotionConfig config = WaveMotionConfig.defaultConfig();
+  WaveMotionControl get controlPanel => WaveMotionControl(this);
 
   @override
-  MotionControl get controlPanel => WaveMotionControl(this);
+  WaveMotionConfig defaultConfig() => WaveMotionConfig.defaultConfig();
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
-        final dy = sin(animation!.value * 2 * pi) * config.dy;
-        final dx = cos(animation!.value * 2 * pi) * config.dx;
+        final dy = sin(animation.value * 2 * pi) * config.dy;
+        final dx = cos(animation.value * 2 * pi) * config.dx;
         return Transform.translate(
           offset: Offset(dx, dy),
           child: child,
@@ -111,14 +120,10 @@ class _WaveMotionState extends MotionState {
       child: widget.child,
     );
   }
-
 }
 
-class WaveMotionControl extends MotionControl {
+class WaveMotionControl extends MotionControl<WaveMotion, WaveMotionConfig> {
   const WaveMotionControl(super.state, {super.key});
-
-  @override
-  WaveMotionConfig get config => state.config as WaveMotionConfig;
 
   @override
   List<Widget> fields(BuildContext context) {
@@ -145,7 +150,7 @@ class WaveMotionControl extends MotionControl {
           if (ms != null) {
             updateConfig(
               config.copyWith(
-                duration: Duration(milliseconds: ms),
+                startDelay: Duration(milliseconds: ms),
               ),
             );
           }
@@ -158,8 +163,11 @@ class WaveMotionControl extends MotionControl {
               initialText: config.dx.toString(),
               labelText: 'X',
               onChanged: (value) {
-                final dx = double.tryParse(value);
-                updateConfig(config.copyWith(dx: dx));
+                updateConfig(
+                  config.copyWith(
+                    dx: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),
@@ -169,8 +177,11 @@ class WaveMotionControl extends MotionControl {
               initialText: config.dy.toString(),
               labelText: 'Y',
               onChanged: (value) {
-                final dy = double.tryParse(value);
-                updateConfig(config.copyWith(dy: dy));
+                updateConfig(
+                  config.copyWith(
+                    dy: double.tryParse(value),
+                  ),
+                );
               },
             ),
           ),
@@ -180,6 +191,20 @@ class WaveMotionControl extends MotionControl {
         selected: config.curve,
         onChanged: (curve) {
           updateConfig(config.copyWith(curve: curve));
+        },
+      ),
+      UICheckbox(
+        value: config.reverse,
+        label: Text("Reverse"),
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(reverse: !config.reverse));
+        },
+      ),
+      UICheckbox(
+        value: config.repeat,
+        label: Text("Repeat"),
+        onChanged: (bool value) {
+          state.updateConfig(config.copyWith(repeat: !config.repeat));
         },
       ),
     ];

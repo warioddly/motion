@@ -9,6 +9,8 @@ class MotionConfig {
   final Duration reverseDuration;
   final Curve curve;
   final Curve reverseCurve;
+  final bool repeat;
+  final bool reverse;
 
   const MotionConfig({
     required this.duration,
@@ -19,6 +21,8 @@ class MotionConfig {
     required this.reverseDuration,
     required this.curve,
     required this.reverseCurve,
+    this.repeat = false,
+    this.reverse = false,
   });
 
   factory MotionConfig.defaultConfig() {
@@ -31,6 +35,8 @@ class MotionConfig {
       value: 0.0,
       curve: Curves.linear,
       reverseCurve: Curves.linear,
+      repeat: false,
+      reverse: false,
     );
   }
 
@@ -43,6 +49,8 @@ class MotionConfig {
     Duration? reverseDuration,
     Curve? curve,
     Curve? reverseCurve,
+    bool? repeat,
+    bool? reverse,
   }) {
     return MotionConfig(
       duration: duration ?? this.duration,
@@ -53,7 +61,8 @@ class MotionConfig {
       value: value ?? this.value,
       curve: curve ?? this.curve,
       reverseCurve: reverseCurve ?? this.reverseCurve,
+      repeat: repeat ?? this.repeat,
+      reverse: reverse ?? this.reverse,
     );
   }
 }
-

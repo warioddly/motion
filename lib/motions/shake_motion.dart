@@ -32,9 +32,9 @@ class _ShakeMotionState extends MotionState {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animation!,
+      animation: animation,
       builder: (context, child) {
-        double offset = math.sin((animation?.value ?? 1) * 2 * math.pi * 4) * 8;
+        double offset = math.sin(animation.value * 2 * math.pi * 4) * 8;
         return Transform.translate(
           offset: Offset(offset, 0),
           child: child,
