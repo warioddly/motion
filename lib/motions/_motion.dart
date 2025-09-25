@@ -59,7 +59,9 @@ abstract class MotionState extends State<Motion> with SingleTickerProviderStateM
       reverseCurve: config.reverseCurve,
     );
 
-    animationController?.repeat(period: config.duration);
+    animationController?.repeat(
+      period: config.duration,
+    );
   }
 
   void updateConfig(covariant MotionConfig config) {
